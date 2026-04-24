@@ -1,13 +1,14 @@
 #include <stdio.h>
 #include <stdbool.h>
-#include "SDL3/SDL.h" // Note o caminho relativo à sua pasta include
+#include <SDL2/SDL.h>
 #include "../include/chip8.h"
 
 void load_rom(memory *m, const char *path) {
     FILE *file = fopen(path, "rb");
     if (file) {
         // Lê os dados a partir de 0x200
-        fread(&m->data[0x200], 1, 4096 - 0x200, file);
+        size_t bytes_read = fread(&m->data[0x200], 1, 4096 - 0x200, file);
+        (void)bytes_read;  // Suprime warning se não usado
         fclose(file);
     } else {
         printf("Erro ao abrir a ROM!\n");
@@ -15,14 +16,16 @@ void load_rom(memory *m, const char *path) {
 }
 
 int main(int argc, char* argv[]) {
+    (void)argc;   // Suprime warnings de parâmetros não utilizados
+    (void)argv;
     // 1. Inicialize SDL
-    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS)) {
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) != 0) {
         SDL_Log("Erro ao inicializar SDL: %s", SDL_GetError());
         return -1;
     }
 
     // 2. Creates a window 640 x 320
-    SDL_Window* window = SDL_CreateWindow("Meu Emulador CHIP-8", 640, 320, 0);
+    SDL_Window* window = SDL_CreateWindow("Meu Emulador CHIP-8", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 320, SDL_WINDOW_SHOWN);
     if (!window) {
         SDL_Log("Erro ao criar janela: %s", SDL_GetError());
         SDL_Quit();
@@ -30,7 +33,7 @@ int main(int argc, char* argv[]) {
     }
 
     // 3. Creates the Renderer
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, NULL);
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     // 4. Inicialize CHIP-8 structure
     chip8 c;
@@ -38,7 +41,7 @@ int main(int argc, char* argv[]) {
     chip8_init(&c, &m);
 
     // Call the game ROM
-    load_rom(&m, "PONG.ch8");
+    load_rom(&m, "Pong.ch8");
 
     bool quit = false;
     SDL_Event e;
@@ -48,27 +51,27 @@ int main(int argc, char* argv[]) {
     // Main Loop
     while (!quit) {
         while (SDL_PollEvent(&e)) {
-            if (e.type == SDL_EVENT_QUIT) quit = true;
+            if (e.type == SDL_QUIT) quit = true;
 
-            if (e.type == SDL_EVENT_KEY_DOWN || e.type == SDL_EVENT_KEY_UP) {
-                uint8_t state = (e.type == SDL_EVENT_KEY_DOWN) ? 1 : 0;
-                switch (e.key.key) {
+            if (e.type == SDL_KEYDOWN || e.type == SDL_KEYUP) {
+                uint8_t state = (e.type == SDL_KEYDOWN) ? 1 : 0;
+                switch (e.key.keysym.sym) {
                     case SDLK_1: c.key[0x1] = state; break;
                     case SDLK_2: c.key[0x2] = state; break;
                     case SDLK_3: c.key[0x3] = state; break;
                     case SDLK_4: c.key[0xC] = state; break;
-                    case SDLK_Q: c.key[0x4] = state; break;
-                    case SDLK_W: c.key[0x5] = state; break;
-                    case SDLK_E: c.key[0x6] = state; break;
-                    case SDLK_R: c.key[0xD] = state; break;
-                    case SDLK_A: c.key[0x7] = state; break;
-                    case SDLK_S: c.key[0x8] = state; break;
-                    case SDLK_D: c.key[0x9] = state; break;
-                    case SDLK_F: c.key[0xE] = state; break;
-                    case SDLK_Z: c.key[0xA] = state; break;
-                    case SDLK_X: c.key[0x0] = state; break;
-                    case SDLK_C: c.key[0xB] = state; break;
-                    case SDLK_V: c.key[0xF] = state; break;
+                    case SDLK_q: c.key[0x4] = state; break;
+                    case SDLK_w: c.key[0x5] = state; break;
+                    case SDLK_e: c.key[0x6] = state; break;
+                    case SDLK_r: c.key[0xD] = state; break;
+                    case SDLK_a: c.key[0x7] = state; break;
+                    case SDLK_s: c.key[0x8] = state; break;
+                    case SDLK_d: c.key[0x9] = state; break;
+                    case SDLK_f: c.key[0xE] = state; break;
+                    case SDLK_z: c.key[0xA] = state; break;
+                    case SDLK_x: c.key[0x0] = state; break;
+                    case SDLK_c: c.key[0xB] = state; break;
+                    case SDLK_v: c.key[0xF] = state; break;
                 }
             }
         }
@@ -93,7 +96,7 @@ int main(int argc, char* argv[]) {
             for (int y = 0; y < 32; y++) {
                 for (int x = 0; x < 64; x++) {
                     if (c.display[x][y]) {
-                        SDL_FRect rect = {x * 10.0f, y * 10.0f, 10.0f, 10.0f};
+                        SDL_Rect rect = {x * 10, y * 10, 10, 10};
                         SDL_RenderFillRect(renderer, &rect);
                     }
                 }
