@@ -7,25 +7,10 @@ Emulador CHIP-8 completo em C com interface gráfica usando SDL2.
 ### Requisitos
 - GCC (ou outro compilador C)
 - SDL2 (`libsdl2-dev` no Ubuntu/Debian)
-- Make
-
-### Instalação de Dependências (Ubuntu/Debian)
-```bash
-sudo apt-get install build-essential libsdl2-dev
-```
-
-### Compilação Rápida
-```bash
-make              # Compila o projeto
-make run          # Compila e executa
-make clean        # Remove arquivos de compilação
-make rebuild      # Recompila do zero
-make info         # Mostra informações do projeto
-```
 
 ### Compilação Manual
 ```bash
-gcc -o exe/chip8 src/main.c src/chip8.c -I./include $(pkg-config --cflags --libs sdl2) -lm
+gcc src/main.c src/chip8.c -o exe/chip8 -lmingw32 -lSDL2main -lSDL2
 ```
 
 ## Execução

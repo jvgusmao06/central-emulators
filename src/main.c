@@ -1,7 +1,13 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <time.h>
 #include <SDL2/SDL.h>
 #include "../include/chip8.h"
+
+#define PIXEL_SIZE 10
+#define MARGIN 30 // Borda preta ao redor da área de jogo, em pixels
+#define GAME_W (64 * PIXEL_SIZE)
+#define GAME_H (32 * PIXEL_SIZE)
 
 void load_rom(memory *m, const char *path) {
     FILE *file = fopen(path, "rb");
@@ -18,6 +24,10 @@ void load_rom(memory *m, const char *path) {
 int main(int argc, char* argv[]) {
     (void)argc;   // Suprime warnings de parâmetros não utilizados
     (void)argv;
+
+    // Seeds the RNG used by opcode CXNN (rand() is deterministic otherwise)
+    srand((unsigned int)time(NULL));
+
     // 1. Inicialize SDL
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) != 0) {
         SDL_Log("Erro ao inicializar SDL: %s", SDL_GetError());
@@ -25,7 +35,9 @@ int main(int argc, char* argv[]) {
     }
 
     // 2. Creates a window 640 x 320
-    SDL_Window* window = SDL_CreateWindow("Meu Emulador CHIP-8", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 320, SDL_WINDOW_SHOWN);
+    SDL_Window* window = SDL_CreateWindow("Meu Emulador CHIP-8",
+        SDL_WINDOWPOS_CENTERED_DISPLAY(0), SDL_WINDOWPOS_CENTERED_DISPLAY(0),
+        GAME_W + 2 * MARGIN, GAME_H + 2 * MARGIN, SDL_WINDOW_SHOWN);
     if (!window) {
         SDL_Log("Erro ao criar janela: %s", SDL_GetError());
         SDL_Quit();
@@ -33,7 +45,7 @@ int main(int argc, char* argv[]) {
     }
 
     // 3. Creates the Renderer
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     // 4. Inicialize CHIP-8 structure
     chip8 c;
@@ -96,7 +108,7 @@ int main(int argc, char* argv[]) {
             for (int y = 0; y < 32; y++) {
                 for (int x = 0; x < 64; x++) {
                     if (c.display[x][y]) {
-                        SDL_Rect rect = {x * 10, y * 10, 10, 10};
+                        SDL_Rect rect = {MARGIN + x * PIXEL_SIZE, MARGIN + y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE};
                         SDL_RenderFillRect(renderer, &rect);
                     }
                 }
