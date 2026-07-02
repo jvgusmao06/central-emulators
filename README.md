@@ -10,14 +10,13 @@ Emulador CHIP-8 completo em C com interface gráfica usando SDL2.
 
 ### Compilação Manual
 ```bash
-gcc src/main.c src/chip8.c -o exe/chip8 -lmingw32 -lSDL2main -lSDL2
+gcc src/main.c src/chip8.c -o exe/chip8 - lSDL3
 ```
 
 ## Execução
 
 ```bash
-cd exe
-./chip8
+./exe/chip8
 ```
 
 ## Controles (Teclado CHIP-8)

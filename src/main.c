@@ -1,11 +1,13 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
+#include <SDL3/SDL_main.h>
 #include "../include/chip8.h"
 
 #define PIXEL_SIZE 10
-#define MARGIN 30 // Borda preta ao redor da área de jogo, em pixels
+#define MARGIN 0 // Borda preta ao redor da área de jogo, em pixels
 #define GAME_W (64 * PIXEL_SIZE)
 #define GAME_H (32 * PIXEL_SIZE)
 
@@ -29,23 +31,27 @@ int main(int argc, char* argv[]) {
     srand((unsigned int)time(NULL));
 
     // 1. Inicialize SDL
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) != 0) {
+    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS)) {
         SDL_Log("Erro ao inicializar SDL: %s", SDL_GetError());
         return -1;
     }
 
-    // 2. Creates a window 640 x 320
+    // 2. Creates a window
     SDL_Window* window = SDL_CreateWindow("Meu Emulador CHIP-8",
-        SDL_WINDOWPOS_CENTERED_DISPLAY(0), SDL_WINDOWPOS_CENTERED_DISPLAY(0),
-        GAME_W + 2 * MARGIN, GAME_H + 2 * MARGIN, SDL_WINDOW_SHOWN);
+        GAME_W + 2 * MARGIN, GAME_H + 2 * MARGIN, 0);
     if (!window) {
         SDL_Log("Erro ao criar janela: %s", SDL_GetError());
         SDL_Quit();
         return -1;
     }
 
+    // Centraliza a janela no monitor principal (índice 0)
+    SDL_SetWindowPosition(window,
+        SDL_WINDOWPOS_CENTERED_DISPLAY(0), SDL_WINDOWPOS_CENTERED_DISPLAY(0));
+
     // 3. Creates the Renderer
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, NULL);
+    SDL_SetRenderVSync(renderer, 1);
 
     // 4. Inicialize CHIP-8 structure
     chip8 c;
@@ -63,27 +69,27 @@ int main(int argc, char* argv[]) {
     // Main Loop
     while (!quit) {
         while (SDL_PollEvent(&e)) {
-            if (e.type == SDL_QUIT) quit = true;
+            if (e.type == SDL_EVENT_QUIT) quit = true;
 
-            if (e.type == SDL_KEYDOWN || e.type == SDL_KEYUP) {
-                uint8_t state = (e.type == SDL_KEYDOWN) ? 1 : 0;
-                switch (e.key.keysym.sym) {
+            if (e.type == SDL_EVENT_KEY_DOWN || e.type == SDL_EVENT_KEY_UP) {
+                uint8_t state = (e.type == SDL_EVENT_KEY_DOWN) ? 1 : 0;
+                switch (e.key.key) {
                     case SDLK_1: c.key[0x1] = state; break;
                     case SDLK_2: c.key[0x2] = state; break;
                     case SDLK_3: c.key[0x3] = state; break;
                     case SDLK_4: c.key[0xC] = state; break;
-                    case SDLK_q: c.key[0x4] = state; break;
-                    case SDLK_w: c.key[0x5] = state; break;
-                    case SDLK_e: c.key[0x6] = state; break;
-                    case SDLK_r: c.key[0xD] = state; break;
-                    case SDLK_a: c.key[0x7] = state; break;
-                    case SDLK_s: c.key[0x8] = state; break;
-                    case SDLK_d: c.key[0x9] = state; break;
-                    case SDLK_f: c.key[0xE] = state; break;
-                    case SDLK_z: c.key[0xA] = state; break;
-                    case SDLK_x: c.key[0x0] = state; break;
-                    case SDLK_c: c.key[0xB] = state; break;
-                    case SDLK_v: c.key[0xF] = state; break;
+                    case SDLK_Q: c.key[0x4] = state; break;
+                    case SDLK_W: c.key[0x5] = state; break;
+                    case SDLK_E: c.key[0x6] = state; break;
+                    case SDLK_R: c.key[0xD] = state; break;
+                    case SDLK_A: c.key[0x7] = state; break;
+                    case SDLK_S: c.key[0x8] = state; break;
+                    case SDLK_D: c.key[0x9] = state; break;
+                    case SDLK_F: c.key[0xE] = state; break;
+                    case SDLK_Z: c.key[0xA] = state; break;
+                    case SDLK_X: c.key[0x0] = state; break;
+                    case SDLK_C: c.key[0xB] = state; break;
+                    case SDLK_V: c.key[0xF] = state; break;
                 }
             }
         }
@@ -108,7 +114,7 @@ int main(int argc, char* argv[]) {
             for (int y = 0; y < 32; y++) {
                 for (int x = 0; x < 64; x++) {
                     if (c.display[x][y]) {
-                        SDL_Rect rect = {MARGIN + x * PIXEL_SIZE, MARGIN + y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE};
+                        SDL_FRect rect = {(float)(MARGIN + x * PIXEL_SIZE), (float)(MARGIN + y * PIXEL_SIZE), (float)PIXEL_SIZE, (float)PIXEL_SIZE};
                         SDL_RenderFillRect(renderer, &rect);
                     }
                 }
