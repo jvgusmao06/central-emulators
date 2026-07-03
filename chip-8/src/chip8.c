@@ -54,6 +54,10 @@ void chip8_init(chip8 *c, memory *m)
 
     c->delay_timer = 0;
     c->sound_timer = 0;
+
+    for(int i = 0; i < 16; i++){
+        c->key[i] = 0;
+    }
 }
 
 void chip_cycle(chip8 *c, memory *m)

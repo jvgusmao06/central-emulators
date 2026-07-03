@@ -7,7 +7,6 @@
 #include "../include/chip8.h"
 
 #define PIXEL_SIZE 10
-#define MARGIN 0 // Borda preta ao redor da área de jogo, em pixels
 #define GAME_W (64 * PIXEL_SIZE)
 #define GAME_H (32 * PIXEL_SIZE)
 
@@ -62,7 +61,7 @@ int main(int argc, char *argv[])
     chip8_init(&c, &m);
 
     // Call the game ROM
-    load_rom(&m, "Pong.ch8");
+    load_rom(&m, argv[1]);
 
     bool quit = false;
     SDL_Event e;
