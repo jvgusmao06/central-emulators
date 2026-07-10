@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "emulators",
+  "productName": "central-emulators",
   "version": "0.1.0",
-  "identifier": "eltr",
+  "identifier": "com.central.emulators",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -12,9 +12,9 @@
   "app": {
     "windows": [
       {
-        "title": "emulators",
-        "width": 800,
-        "height": 600
+        "title": "Central de Emuladores",
+        "width": 900,
+        "height": 700
       }
     ],
     "security": {
@@ -30,6 +30,9 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
+    ],
+    "resources": [
+      "../../chip-8/roms/**/*"
     ]
   }
 }
