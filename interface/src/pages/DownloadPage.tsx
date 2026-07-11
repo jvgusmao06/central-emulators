@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import "./DownloadPage.css";
 
 interface AvailableEmulator{
   id: string;
@@ -29,14 +30,12 @@ export function DownloadPage() {
   }
 
   return (
-    <div className="aba-conteudo">
-      <p className="status-bar">{status}</p>
-      <h2>Disponíveis para Download</h2>
-      <div className="grid-emuladores">
+    <div>
+      <h2>Available for download:</h2>
+      <div className="emulators-grid">
         {emulators.map((emul) => (
           <div key={emul.id} className="card-emulador loja">
-            <h3>{emul.id.toUpperCase()}</h3>
-            <span className="badge">{emul.console}</span>
+            <h3>{emul.console.toUpperCase()}</h3>
             <br />
             
             {emul.status === "disponivel" && (
