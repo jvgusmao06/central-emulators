@@ -1,0 +1,86 @@
+/* ==========================================================================
+   CONFIGURAÇÃO DA GRADE DE CARDS
+   ========================================================================== */
+.emulators-grid {
+  display: grid;
+  /* Aumentamos o tamanho mínimo do card na grade de 220px para 280px */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+  gap: 25px;
+  padding: 20px 0;
+}
+
+/* ==========================================================================
+   O CARD (MAIOR E EVOLUÍDO)
+   ========================================================================== */
+.card {
+  background-color: #1a2332;
+  border: 1px solid #2d3748;
+  border-radius: 16px;
+  padding: 30px; /* Aumentamos o espaço interno para o card respirar mais */
+  
+  min-height: 100px; 
+  
+  /* Flexbox vertical para controlar o topo e a base */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  border-color: #3182ce;
+}
+
+.card h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 1.5rem; /* Título um pouco maior para acompanhar o card */
+  text-align: center;
+}
+
+/* ==========================================================================
+   OS BOTÕES (MENORES E NO RODAPÉ)
+   ========================================================================== */
+.card-actions {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  
+  /* 🚀 O SEGREDO: Empurra todo o grupo de botões para o fundo do card, 
+     não importa a altura que o card tenha! */
+  margin-top: auto; 
+}
+
+.card-actions button {
+  flex: 1;                  /* Faz os três botões dividirem o espaço igualmente */
+  padding: 8px 12px;        /* Diminuímos o preenchimento para o botão ficar menor e elegante */
+  font-size: 0.85rem;       /* Letra menor para dar um aspecto mais compacto */
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+/* Cores específicas para cada botão ficar com estilo de Launcher profissional */
+.btn-play {
+  background-color: #3182ce;
+  color: #ffffff;
+}
+.btn-play:hover { background-color: #2b6cb0; }
+
+.btn-settings {
+  background-color: #2d3748;
+  color: #a0aec0;
+  border: 1px solid #4a5568;
+}
+.btn-action:hover { background-color: #3e4b5e; color: #fff; }
+
+.btn-delete {
+  background-color: #742a2a;
+  color: #f5c6c6;
+}
+.btn-delete:hover { background-color: #9b2c2c; }

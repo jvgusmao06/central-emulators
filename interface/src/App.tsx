@@ -1,9 +1,12 @@
 import { useState } from "react";
-import { DownloadPage } from "./pages/DownloadPage"; // <-- Importa a sua nova tela modularizada!
+import { DownloadPage } from "./pages/DownloadPage";
+import { EmulatorsPage } from "./pages/EmulatorsPage";
 import "./App.css";
 
+//Uma barra lateral com as abas
+
 function App() {
-  const [activeTab, setActiveTab] = useState<"downloads" | "emulators">("downloads");
+  const [activeTab, setActiveTab] = useState<"downloads" | "emulators" | "settings">("downloads");
 
   return (
     <div className="app-layout">
@@ -27,7 +30,7 @@ function App() {
       </aside>
       <main className="content-area">
         {activeTab === "downloads" && <DownloadPage />}
-        {activeTab === "emulators" && <div>(Tela de Jogos virá aqui no futuro)</div>}
+        {activeTab === "emulators" && <EmulatorsPage/>}
       </main>
     </div>
   );

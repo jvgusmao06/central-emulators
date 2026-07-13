@@ -1,24 +1,36 @@
 import { useState, useEffect } from "react";
 import "./DownloadPage.css";
 
+// Uma tela com varias opções de emuladores baixaveis
+
 interface AvailableEmulator{
   id: string;
   console: string;
-  status: "disponivel" | "baixando" | "instalado";
+  status: "available" | "downloading" | "downloaded" | "unavailable";
 }
 
 export function DownloadPage() {  
-  const [status, setStatus] = useState("Inicio");
+  const [status, setStatus] = useState("Begining");
   const [emulators, setEmulators] = useState<AvailableEmulator[]>([
     {
       id: "chip-8",
       console: "CHIP-8",
-      status: "disponivel"
+      status: "available"
     },
+    {
+      id: "gameboy",
+      console: "GameBoy",
+      status: "unavailable"
+    },
+    {
+      id: "ps1",
+      console: "PS1",
+      status: "unavailable"
+    }
   ]);
 
   async function handleDownloadEmulator(id: string){
-    setEmulators(prev => prev.map(emul => emul.id === id ? {...emul, status: "baixando"}: emul));
+    setEmulators(prev => prev.map(emul => emul.id === id ? {...emul, status: "downloading"}: emul));
     setStatus(`Downloading ${console}...`);
 
     try{
@@ -34,18 +46,21 @@ export function DownloadPage() {
       <h2>Available for download:</h2>
       <div className="emulators-grid">
         {emulators.map((emul) => (
-          <div key={emul.id} className="card-emulador loja">
-            <h3>{emul.console.toUpperCase()}</h3>
+          <div key={emul.id} className="card">
+            <h3>{emul.console}</h3>
             <br />
             
-            {emul.status === "disponivel" && (
+            {emul.status === "available" && (
               <button onClick={() => handleDownloadEmulator(emul.id)}>Baixar e Instalar</button>
             )}
-            {emul.status === "baixando" && (
-              <button className="btn-loading" disabled>Baixando...</button>
+            {emul.status === "downloading" && (
+              <button className="btn-loading" disabled>downloading...</button>
             )}
-            {emul.status === "instalado" && (
-              <button className="btn-success" disabled>Pronto para Uso ✓</button>
+            {emul.status === "downloaded" && (
+              <button className="btn-success" disabled>Pronto para Uso</button>
+            )}
+            {emul.status === "unavailable" && (
+                <button className="btn-unavailable" disabled>Em breve...</button>
             )}
           </div>
         ))}
