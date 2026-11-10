@@ -1,30 +1,73 @@
 /* ==========================================================================
+   CABEÇALHO DA PÁGINA DE EMULADORES
+   ========================================================================== */
+.emulators-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #2d3748;
+  padding-bottom: 15px;
+}
+
+.emulators-header h2 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 1.6rem;
+}
+
+.emulators-subtitle {
+  margin: 4px 0 0 0;
+  color: #a0aec0;
+  font-size: 0.9rem;
+}
+
+.btn-refresh-list {
+  background-color: transparent;
+  color: #90cdf4;
+  border: 1px solid #3182ce;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.btn-refresh-list:hover {
+  background-color: rgba(49, 130, 206, 0.2);
+}
+
+.action-feedback-banner {
+  background-color: #2b4365;
+  color: #bee3f8;
+  border: 1px solid #3182ce;
+  padding: 10px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* ==========================================================================
    CONFIGURAÇÃO DA GRADE DE CARDS
    ========================================================================== */
 .emulators-grid {
   display: grid;
-  /* Aumentamos o tamanho mínimo do card na grade de 220px para 280px */
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
   gap: 25px;
-  padding: 20px 0;
 }
 
 /* ==========================================================================
-   O CARD (MAIOR E EVOLUÍDO)
+   O CARD DE EMULADOR
    ========================================================================== */
 .card {
   background-color: #1a2332;
   border: 1px solid #2d3748;
   border-radius: 16px;
-  padding: 30px; /* Aumentamos o espaço interno para o card respirar mais */
-  
-  min-height: 100px; 
-  
-  /* Flexbox vertical para controlar o topo e a base */
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   transition: transform 0.2s ease, border-color 0.2s ease;
 }
@@ -34,53 +77,117 @@
   border-color: #3182ce;
 }
 
+.card-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.card-icon {
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+}
+
 .card h3 {
   margin: 0;
   color: #ffffff;
-  font-size: 1.5rem; /* Título um pouco maior para acompanhar o card */
-  text-align: center;
+  font-size: 1.4rem;
+}
+
+.card-description {
+  font-size: 0.85rem;
+  color: #a0aec0;
+  margin-top: 6px;
 }
 
 /* ==========================================================================
-   OS BOTÕES (MENORES E NO RODAPÉ)
+   BOTÕES DE AÇÃO DO CARD
    ========================================================================== */
 .card-actions {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
-  
-  /* 🚀 O SEGREDO: Empurra todo o grupo de botões para o fundo do card, 
-     não importa a altura que o card tenha! */
   margin-top: auto; 
 }
 
 .card-actions button {
-  flex: 1;                  /* Faz os três botões dividirem o espaço igualmente */
-  padding: 8px 12px;        /* Diminuímos o preenchimento para o botão ficar menor e elegante */
-  font-size: 0.85rem;       /* Letra menor para dar um aspecto mais compacto */
+  padding: 10px 12px;
+  font-size: 0.9rem;
   font-weight: 600;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.2s;
 }
 
-/* Cores específicas para cada botão ficar com estilo de Launcher profissional */
 .btn-play {
+  flex: 2;
   background-color: #3182ce;
   color: #ffffff;
 }
 .btn-play:hover { background-color: #2b6cb0; }
 
 .btn-settings {
+  flex: 1;
   background-color: #2d3748;
   color: #a0aec0;
   border: 1px solid #4a5568;
 }
-.btn-action:hover { background-color: #3e4b5e; color: #fff; }
+.btn-settings:hover { background-color: #3e4b5e; color: #fff; }
 
 .btn-delete {
+  flex: 1;
   background-color: #742a2a;
   color: #f5c6c6;
 }
 .btn-delete:hover { background-color: #9b2c2c; }
+
+/* ==========================================================================
+   ESTADO VAZIO (NENHUM INSTALADO)
+   ========================================================================== */
+.empty-installed-state {
+  text-align: center;
+  background-color: #0e1c35;
+  border: 1px dashed #2d3748;
+  border-radius: 16px;
+  padding: 60px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.empty-installed-state .empty-icon {
+  font-size: 3.5rem;
+}
+
+.empty-installed-state h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 1.3rem;
+}
+
+.empty-installed-state p {
+  margin: 0;
+  color: #a0aec0;
+  max-width: 440px;
+  font-size: 0.95rem;
+}
+
+.btn-go-downloads {
+  margin-top: 10px;
+  background-color: #3182ce;
+  color: #ffffff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-go-downloads:hover {
+  background-color: #2b6cb0;
+}

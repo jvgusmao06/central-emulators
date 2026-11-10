@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import "./DownloadPage.css";
 
@@ -29,6 +29,22 @@ export function DownloadPage() {
       status: "unavailable"
     }
   ]);
+
+  useEffect(() => {
+    async function checkStatus() {
+      try {
+        const installed = await invoke<string[]>("check_installed_emulators");
+        setEmulators((prev) =>
+          prev.map((emul) =>
+            installed.includes(emul.id) ? { ...emul, status: "downloaded" } : emul
+          )
+        );
+      } catch {
+        // Ignora caso esteja executando no browser
+      }
+    }
+    checkStatus();
+  }, []);
 
   async function handleDownloadEmulator(id: string) {
     const target = emulators.find(e => e.id === id);

@@ -30,7 +30,9 @@ function App() {
       </aside>
       <main className="content-area">
         {activeTab === "downloads" && <DownloadPage />}
-        {activeTab === "emulators" && <EmulatorsPage/>}
+        {activeTab === "emulators" && (
+          <EmulatorsPage onNavigateToDownloads={() => setActiveTab("downloads")} />
+        )}
       </main>
     </div>
   );
