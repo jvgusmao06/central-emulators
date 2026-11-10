@@ -25,8 +25,8 @@ pub async fn download_emulator(app_handle: tauri::AppHandle, id: String) -> Resu
     // 1. Define o Link da Release do GitHub e o nome do arquivo final baseado no ID
     let (url, filename) = match id.as_str() {
         "chip-8" => (
-            "https://github.com/seu-usuario/seu-repositorio/releases/download/v1.0.0/chip8.exe",
-            "chip8.exe"
+            "https://github.com/jvgusmao06/Chip-8/releases/latest/download/chip8.exe",
+            "chip8.exe",
         ),
         _ => return Err("Este emulador ainda não está disponível para download.".to_string()),
     };
@@ -34,7 +34,7 @@ pub async fn download_emulator(app_handle: tauri::AppHandle, id: String) -> Resu
     dir.push(filename);
 
     // 2. Cria o cliente HTTP e faz a requisição para o GitHub
-    let client = request::Client::new();
+    let client = reqwest::Client::new();
     let response = client.get(url)
         // O GitHub exige um "User-Agent" (identificação) para permitir downloads via código
         .header("User-Agent", "Tauri-Emulator-Hub") 

@@ -1,16 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { invoke } from "@tauri-apps/api/core";
 import "./DownloadPage.css";
 
 // Uma tela com varias opções de emuladores baixaveis
 
-interface AvailableEmulator{
+interface AvailableEmulator {
   id: string;
   console: string;
   status: "available" | "downloading" | "downloaded" | "unavailable";
 }
 
 export function DownloadPage() {  
-  const [status, setStatus] = useState("Begining");
+  const [downloadMessage, setDownloadMessage] = useState<string>("");
   const [emulators, setEmulators] = useState<AvailableEmulator[]>([
     {
       id: "chip-8",
@@ -29,21 +30,25 @@ export function DownloadPage() {
     }
   ]);
 
-  async function handleDownloadEmulator(id: string){
-    setEmulators(prev => prev.map(emul => emul.id === id ? {...emul, status: "downloading"}: emul));
-    setStatus(`Downloading ${console}...`);
+  async function handleDownloadEmulator(id: string) {
+    const target = emulators.find(e => e.id === id);
+    setEmulators(prev => prev.map(emul => emul.id === id ? { ...emul, status: "downloading" } : emul));
+    setDownloadMessage(`Downloading ${target?.console ?? id}...`);
 
-    try{
-      
-    }
-    catch (e){
-      setStatus(`Error: ${e}`);
+    try {
+      const result = await invoke<string>("download_emulator", { id });
+      setEmulators(prev => prev.map(emul => emul.id === id ? { ...emul, status: "downloaded" } : emul));
+      setDownloadMessage(result);
+    } catch (e) {
+      setEmulators(prev => prev.map(emul => emul.id === id ? { ...emul, status: "available" } : emul));
+      setDownloadMessage(`Error: ${e}`);
     }
   }
 
   return (
     <div>
       <h2>Available for download:</h2>
+      {downloadMessage && <p className="download-status-message">{downloadMessage}</p>}
       <div className="emulators-grid">
         {emulators.map((emul) => (
           <div key={emul.id} className="card">

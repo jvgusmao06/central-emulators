@@ -43,13 +43,16 @@ fn list_roms(folder_path: &str) -> Result<Vec<String>, String> {
     }
 }
 
+mod emulators;
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
             list_roms, 
-            get_default_path
+            get_default_path,
+            emulators::download_emulator
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
